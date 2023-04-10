@@ -1,0 +1,65 @@
+application:
+  ### AUTHENTICATION
+  authentication:
+    access_token:
+      jwt_secret: Z8GJ64eimY
+      life_time: 3600000 # milliseconds
+    refresh_token:
+      jwt_secret: Z8GJ64eimY
+      life_time: 3600000
+    #REDIS(cache)
+    redis:
+      otp_time_out: 3
+
+  i18n:
+    resources:
+      - classpath:message
+  email:
+    from: ${SPRING_EMAIL_FROM:daint.dev@gmail.com}
+spring:
+  main:
+    allow-bean-definition-overriding: true
+    #API GATEWAY CONFIG
+  cloud:
+    gateway:
+      routes:
+        - id: helloService
+          uri: http://localhost:8081/
+          predicates:
+            - Path=/api/v1/**
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=authen_gateway
+    username: postgres
+    password: 123456
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+  data:
+    redis:
+      port: 6379
+      host: localhost
+  #MAIL
+  mail:
+    default-encoding: UTF-8
+    host: smtp.gmail.com
+    username: ${SPRING_EMAIL_USERNAME:daint.dev@gmail.com}
+    password: ${SPRING_EMAIL_PASSWORD:okjjcfwvenhvvncf}
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+    protocol: smtp
+    test-connection: false
+server:
+  port: 9090
+# EUREKA CONFIG
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+  instance:
+    instanceId: myhost:myappname:8080
